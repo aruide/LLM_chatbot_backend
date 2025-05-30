@@ -1,0 +1,13 @@
+langchain
+langchain-community
+langchainhub
+chromadb
+unstructured
+beautifulsoup4
+lxml
+html5lib
+gradio
+duckduckgo-search
+flask
+flask-cors
+ollama
