@@ -1,7 +1,6 @@
 from langchain.llms import Ollama
 from langchain.chains import RetrievalQA
 from config import MODEL_NAME
-from utils.vectordb import load_vectorstore
 from utils.websearch import search_web
 
 SYSTEM_PROMPT = """
