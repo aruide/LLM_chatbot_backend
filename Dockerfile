@@ -1,24 +1,27 @@
 FROM python:3.10-slim
 
-# Installer dépendances système utiles
+# Installer les dépendances système nécessaires à la compilation
 RUN apt-get update && apt-get install -y \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Installer pip et mises à jour
+# Mettre à jour pip
 RUN pip install --upgrade pip
 
-# Dossier de travail dans le conteneur
+# Définir le dossier de travail dans le conteneur
 WORKDIR /app
 
-# Copier le code dans le conteneur
-COPY . /app
+# Copier le fichier requirements.txt en premier (optimisation du cache Docker)
+COPY requirements.txt /app/
 
-# Installer les dépendances Python du projet
+# Installer les dépendances Python
 RUN pip install -r requirements.txt
 
-# Exposer le port de l'application (ex: 5000 pour Flask)
+# Copier le reste du code dans le conteneur
+COPY . /app
+
+# Exposer le port 5000 (ou autre selon ton application)
 EXPOSE 5000
 
-# Lancer l'application (modifie selon ton point d'entrée)
+# Commande pour lancer l'application (modifie selon ton point d'entrée)
 CMD ["python", "main.py"]
