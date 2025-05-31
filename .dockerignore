@@ -1,0 +1,19 @@
+# Ignorer les fichiers/dossiers inutiles
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# Ignorer les environnements virtuels
+.venv/
+venv/
+env/
+
+# Autres fichiers temporaires
+*.swp
+*.tmp
+.DS_Store
+
+# Dossiers de test si non nécessaires
+tests/
