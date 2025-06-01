@@ -1,7 +1,6 @@
 langchain
 langchain-community
 langchainhub
-chromadb
 unstructured
 beautifulsoup4
 lxml
