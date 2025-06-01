@@ -11,3 +11,4 @@ duckduckgo-search
 flask
 flask-cors
 ollama
+TTS
