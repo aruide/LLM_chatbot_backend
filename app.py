@@ -39,8 +39,8 @@ def chat():
     # filepath = os.path.join(AUDIO_DIR, filename)
     # os.makedirs(os.path.dirname(filepath), exist_ok=True)
     
-    filename = texte_to_speech(llm_response)   
-    
+    #filename = texte_to_speech(llm_response)   
+    filename = "rien"
     return jsonify({
         "response": llm_response,
         "audio_path": f"/audio/{filename}"
@@ -64,4 +64,4 @@ def serve_audio(filename):
     return "Not found", 404
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(host='0.0.0.0', port=5000)
