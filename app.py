@@ -5,9 +5,13 @@ from flask_cors import CORS, cross_origin
 import uuid
 import os
 from utils.qa import qa_with_fallback
-#from utils.tts import texte_to_speech
+from utils.tts import call_tts
+import edge_tts
+import asyncio
+import tempfile
 
 app = Flask(__name__, static_folder="audio", static_url_path="/audio")
+TTS_SERVICE_URL = "http://tts-service:6000/speak"
 
 # ✅ CORS bien configuré — autorise localhost:8000
 CORS(app, resources={r"/api/*": {"origins": "http://localhost:8000"}}, supports_credentials=True)
@@ -15,9 +19,9 @@ CORS(app, resources={r"/api/*": {"origins": "http://localhost:8000"}}, supports_
 AUDIO_DIR = os.path.join(os.path.dirname(__file__), "audio")
 os.makedirs(AUDIO_DIR, exist_ok=True)
 
-# Charger une instance TTS une fois au lancement
-# Ici un modèle français basique, tu peux changer par le modèle que tu veux
-#tts = TTS(model_name="tts_models/fr/css10/vits", progress_bar=False, gpu=False)
+FILE_NAME = "audio.wav"  # nom fixe
+FILE_PATH = os.path.join(AUDIO_DIR, FILE_NAME)
+
 
 @app.route('/')
 def index():
@@ -34,26 +38,28 @@ def chat():
 
     llm_response = qa_with_fallback(user_input)
     print(f"[LLM]: {llm_response}")
-
+    
+    
+    asyncio.run(synthesize(llm_response, FILE_PATH))        
     # filename = f"{uuid.uuid4()}.mp3"
     # filepath = os.path.join(AUDIO_DIR, filename)
     # os.makedirs(os.path.dirname(filepath), exist_ok=True)
     
-    #filename = texte_to_speech(llm_response)   
-    filename = "rien"
+    #call_tts(llm_response) 
+    audio_url = f"/audio/{FILE_NAME}"  
     return jsonify({
         "response": llm_response,
-        "audio_path": f"/audio/{filename}"
+        "audio_path": audio_url
     })
 
-# @app.route("/api/tts", methods=["POST"])
-# def tts():
-#     text = request.json.get("text", "")
-#     audio_id = str(uuid.uuid4())
-#     audio_path = os.path.join(AUDIO_DIR, f"{audio_id}.mp3")
-
-#     #generate_gtts(text, audio_path)
-#     return jsonify({"audio_url": f"/api/audio/{audio_id}.mp3"})
+async def synthesize(text, file_path):
+    if os.path.exists(file_path):
+        try:
+            os.remove(file_path)
+        except Exception as e:
+            print(f"Erreur en supprimant {file_path} : {e}")
+    communicate = edge_tts.Communicate(text, voice="fr-FR-DeniseNeural")
+    await communicate.save(file_path)
 
 @app.route("/audio/<filename>")
 @cross_origin()  # ← ajoute les bons en-têtes CORS
