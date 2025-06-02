@@ -5,7 +5,7 @@ from flask_cors import CORS, cross_origin
 import uuid
 import os
 from utils.qa import qa_with_fallback
-from utils.tts import texte_to_speech
+#from utils.tts import texte_to_speech
 
 app = Flask(__name__, static_folder="audio", static_url_path="/audio")
 

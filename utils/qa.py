@@ -16,13 +16,10 @@ def qa_with_fallback(question):
     llm = Ollama(
         model=MODEL_NAME,
         system=SYSTEM_PROMPT,
+        base_url="http://host.docker.internal:11434"
     )
 
-    vectordb = load_vectorstore()
-    retriever = vectordb.as_retriever()
-    qa_chain = RetrievalQA.from_chain_type(llm=llm, retriever=retriever)
-
-    response = qa_chain.run(question)
+    response = llm(question)
 
     if "Je ne sais pas" in response or len(response.strip()) < 20:
         web_data = search_web(question)
