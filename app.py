@@ -1,28 +1,23 @@
 from flask import Flask, request, jsonify, send_file, send_from_directory, make_response
 from flask_cors import CORS, cross_origin
-#from gtts import gTTS
-#from TTS.api import TTS
-import uuid
 import os
 from utils.qa import qa_with_fallback
-from utils.tts import call_tts
 import edge_tts
 import asyncio
-import tempfile
 import time
 
-app = Flask(__name__, static_folder="audio", static_url_path="/audio")
 TTS_SERVICE_URL = "http://tts-service:6000/speak"
-
-# ✅ CORS bien configuré — autorise localhost:8000
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:8000"}}, supports_credentials=True)
+FILE_NAME = "audio.wav"  # nom fixe
 
 AUDIO_DIR = os.path.join(os.path.dirname(__file__), "audio")
 os.makedirs(AUDIO_DIR, exist_ok=True)
 
-FILE_NAME = "audio.wav"  # nom fixe
 FILE_PATH = os.path.join(AUDIO_DIR, FILE_NAME)
 
+app = Flask(__name__, static_folder="audio", static_url_path="/audio")
+
+# CORS autorise localhost:8000
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:8000"}}, supports_credentials=True)
 
 @app.route('/')
 def index():
@@ -42,11 +37,6 @@ def chat():
     
     
     asyncio.run(synthesize(llm_response, FILE_PATH))        
-    # filename = f"{uuid.uuid4()}.mp3"
-    # filepath = os.path.join(AUDIO_DIR, filename)
-    # os.makedirs(os.path.dirname(filepath), exist_ok=True)
-    
-    #call_tts(llm_response) 
     audio_url = f"/audio/{FILE_NAME}?t={int(time.time())}"  
     return jsonify({
         "response": llm_response,
@@ -58,7 +48,7 @@ async def synthesize(text, file_path):
     await communicate.save(file_path)
 
 @app.route("/audio/<filename>")
-@cross_origin()  # ← ajoute les bons en-têtes CORS
+@cross_origin()
 def serve_audio(filename):
     path = os.path.join(AUDIO_DIR, filename)
     if os.path.exists(path):
