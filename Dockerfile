@@ -1,27 +1,37 @@
-FROM python:3.10
+# Étape 1 : Utiliser une image légère mais complète
+FROM python:3.10-slim
 
-# Installer les dépendances système nécessaires à la compilation
-RUN apt-get update && apt-get install -y \
+# Étape 2 : Installer les dépendances système nécessaires
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-   && rm -rf /var/lib/apt/lists/*
+    libxml2-dev \
+    libxslt1-dev \
+    libffi-dev \
+    libglib2.0-0 \
+    libsm6 \
+    libxrender1 \
+    libxext6 \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
-# Mettre à jour pipAdd commentMore actions
+# Étape 3 : Mettre à jour pip
 RUN pip install --upgrade pip
 
-# Définir le dossier de travail dans le conteneur
+# Étape 4 : Définir le répertoire de travail
 WORKDIR /app
 
-# Copier le fichier requirements.txt en premier (optimisation du cache Docker)
-COPY requirements.txt /app/
+# Étape 5 : Copier les dépendances en premier pour optimiser le cache
+COPY requirements.txt .
 
-# Installer les dépendances Python
-RUN pip install -r requirements.txt
+# Étape 6 : Installer les dépendances Python
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copier le reste du code dans le conteneur
-COPY . /app
+# Étape 7 : Copier le code source
+COPY . .
 
-# Exposer le port 5000 (ou autre selon ton application)
+# Étape 8 : Exposer le port (modifiable selon ton app)
 EXPOSE 5000
 
-# Commande pour lancer l'application (modifie selon ton point d'entrée)
+# Étape 9 : Commande de lancement
 CMD ["python", "app.py"]
