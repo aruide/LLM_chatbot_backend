@@ -13,3 +13,4 @@ flask-cors
 ollama
 edge-tts
 requests
+sentence-transformers

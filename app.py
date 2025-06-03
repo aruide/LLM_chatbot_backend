@@ -9,6 +9,7 @@ from utils.tts import call_tts
 import edge_tts
 import asyncio
 import tempfile
+import time
 
 app = Flask(__name__, static_folder="audio", static_url_path="/audio")
 TTS_SERVICE_URL = "http://tts-service:6000/speak"
@@ -46,18 +47,13 @@ def chat():
     # os.makedirs(os.path.dirname(filepath), exist_ok=True)
     
     #call_tts(llm_response) 
-    audio_url = f"/audio/{FILE_NAME}"  
+    audio_url = f"/audio/{FILE_NAME}?t={int(time.time())}"  
     return jsonify({
         "response": llm_response,
         "audio_path": audio_url
     })
 
 async def synthesize(text, file_path):
-    if os.path.exists(file_path):
-        try:
-            os.remove(file_path)
-        except Exception as e:
-            print(f"Erreur en supprimant {file_path} : {e}")
     communicate = edge_tts.Communicate(text, voice="fr-FR-DeniseNeural")
     await communicate.save(file_path)
 

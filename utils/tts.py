@@ -7,5 +7,5 @@ def call_tts(message):
     response = requests.post(url, json=payload)
     
     if response.status_code == 200:
-        with open("output.wav", "wb") as f:
+        with open("audio/audio.wav", "wb") as f:
             f.write(response.content)            
