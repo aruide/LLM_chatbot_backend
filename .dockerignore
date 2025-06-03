@@ -17,3 +17,6 @@ env/
 
 # Dossiers de test si non nécessaires
 tests/
+
+node_modules
+vendor
