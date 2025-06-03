@@ -1,37 +1,20 @@
+# LMM_chatbot_backend
+
+⚠️ Ce dépôt est utilisé dans le projet [LMM_chatbot_docker](https://github.com/aruide/LLM_chatbot_docker).  
+Veuillez consulter les étapes d’installation et d’utilisation dans ce dépôt principal.
+
+---
+
+## 🐍 Prérequis
+
+- **Python 3.10** (il est recommandé d’utiliser cette version précise pour éviter des incompatibilités)  
+- Un environnement virtuel Python (recommandé)  
+
+---
+
+## 📦 Installation des dépendances
+
+Pour installer les dépendances nécessaires, exécutez la commande suivante dans votre environnement virtuel activé :
+
+```bash
 pip install -r requirements.txt
-
-python -m venv venv
-venv\Scripts\activate
-.\.venv\Scripts\Activate.ps1
-source .venv/Scripts/activate
-pip install -r requirements.txt
-python -m http.server 8000
-
-```bach
-project/
-├── backend/
-│   ├── app.py
-│   ├── requirements.txt
-│   └── utils/
-│       ├── __init__.py
-│       ├── qa.py
-│       ├── vectordb.py
-│       └── websearch.py
-├── frontend/
-│   ├── index.html
-│   ├── app.js
-│   └── assets/
-│       └── model/
-│           ├── model.json
-│           ├── *.moc3
-│           ├── *.png
-│           └── ...
-├── README.md
-└── .gitignore
-```
-
-pyenv install 3.10.11
-pyenv global 3.10.11
-
-python -m venv .venv
-.venv\Scripts\activate
